@@ -18,6 +18,7 @@ const adminCategoryRoutes = require('./routes/admin/categories');
 const adminDiscountRoutes = require('./routes/admin/discounts');
 const adminStatsRoutes = require('./routes/admin/stats');
 const favoriteRoute = require('./routes/favorite');
+const reviewRoutes = require("./routes/reviews");
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -48,6 +49,7 @@ app.use('/api/admin/categories', adminCategoryRoutes);
 app.use('/api/admin/discounts', adminDiscountRoutes);
 app.use('/api/admin/stats', adminStatsRoutes);
 app.use('/api/favorites', favoriteRoute);
+app.use("/api/reviews", reviewRoutes);
 
 async function start() {
   await connectDB();
