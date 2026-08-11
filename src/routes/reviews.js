@@ -56,7 +56,7 @@ router.post("/", authRequired, async (req, res) => {
 
     const review = new Review({
       bookId,
-      userId: req.user._id,
+      userId: req.userId,
       rating,
       comment,
     });
@@ -100,7 +100,7 @@ router.put("/:id", authRequired, async (req, res) => {
       });
     }
 
-    if (review.userId.toString() !== req.user._id.toString()) {
+    if (review.userId.toString() !== req.userId) {
       return res.status(403).json({
         success: false,
         message: "Bạn không có quyền sửa đánh giá này",
@@ -140,7 +140,7 @@ router.delete("/:id", authRequired, async (req, res) => {
       });
     }
 
-    if (review.userId.toString() !== req.user._id.toString()) {
+    if (review.userId.toString() !== req.userId) {
       return res.status(403).json({
         success: false,
         message: "Bạn không có quyền xóa",

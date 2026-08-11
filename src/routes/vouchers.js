@@ -9,13 +9,9 @@ router.get('/', async (req, res) => {
     // Fetch active discounts that are within start/end dates
     const discounts = await Discount.find({
       active: true,
-      $or: [
-        { startDate: null },
-        { startDate: { $lte: now } }
-      ],
-      $or: [
-        { endDate: null },
-        { endDate: { $gte: now } }
+      $and: [
+        { $or: [{ startDate: null }, { startDate: { $lte: now } }] },
+        { $or: [{ endDate: null }, { endDate: { $gte: now } }] }
       ]
     }).sort({ createdAt: -1 });
 
