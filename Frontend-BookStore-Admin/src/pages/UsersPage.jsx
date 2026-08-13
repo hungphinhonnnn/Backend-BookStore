@@ -103,8 +103,13 @@ export default function UsersPage() {
     if (!deleteTarget) return;
     try {
       await api.delete(`/api/admin/users/${deleteTarget.id}`);
-      setUsers((prev) => prev.filter((u) => u.id !== deleteTarget.id));
+      const remaining = users.filter((u) => u.id !== deleteTarget.id);
+      setUsers(remaining);
       setTotal((prev) => prev - 1);
+      if (remaining.length === 0 && page > 1) {
+        setPage(page - 1);
+        load(page - 1, buildFilters());
+      }
       toast('Đã xóa tài khoản', 'success');
     } catch (err) {
       toast(err.response?.data?.error || 'Xóa thất bại', 'error');

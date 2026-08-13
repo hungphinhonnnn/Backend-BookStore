@@ -158,6 +158,8 @@ router.get('/dashboard', async (_req, res) => {
       notes: o.notes || '',
       paymentMethod: o.paymentMethod || 'cash_on_delivery',
       shippingFee: o.shippingFee || 0,
+      discountCode: o.discountCode || '',
+      discountAmount: o.discountAmount || 0,
       createdAt: o.createdAt?.toISOString?.() || o.createdAt,
       totalAmount: o.totalAmount,
       status: o.status,

@@ -19,6 +19,7 @@ const adminDiscountRoutes = require('./routes/admin/discounts');
 const adminStatsRoutes = require('./routes/admin/stats');
 const favoriteRoute = require('./routes/favorite');
 const reviewRoutes = require("./routes/reviews");
+const voucherRoutes = require('./routes/vouchers');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -50,6 +51,7 @@ app.use('/api/admin/discounts', adminDiscountRoutes);
 app.use('/api/admin/stats', adminStatsRoutes);
 app.use('/api/favorites', favoriteRoute);
 app.use("/api/reviews", reviewRoutes);
+app.use('/api/vouchers', voucherRoutes);
 
 async function start() {
   await connectDB();

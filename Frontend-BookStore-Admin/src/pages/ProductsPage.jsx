@@ -31,13 +31,6 @@ export default function ProductsPage() {
 
   const urlSearch = searchParams.get('search') || '';
   useEffect(() => {
-    setSearch(urlSearch);
-    setPage(1);
-    load(1, { search: urlSearch });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [urlSearch]);
-
-  useEffect(() => {
     api.get('/api/categories').then(({ data }) => {
       setCategories(data.categories || data.data || []);
     });
@@ -74,6 +67,18 @@ export default function ProductsPage() {
   filtersRef.current = useMemo(() => buildFilters(), [buildFilters]);
 
   useEffect(() => {
+    setSearch(urlSearch);
+    setPage(1);
+    load(1, { ...filtersRef.current, search: urlSearch });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [urlSearch]);
+
+  const mounted = useRef(false);
+  useEffect(() => {
+    if (!mounted.current) {
+      mounted.current = true;
+      return;
+    }
     load(1, filtersRef.current);
   }, [categoryFilter, sort, load]);
 
@@ -84,8 +89,7 @@ export default function ProductsPage() {
 
   const onSearch = () => {
     setPage(1);
-    load(1, buildFilters());
-    if (search.trim()) setSearchParams({ search: search.trim() });
+    setSearchParams(search.trim() ? { search: search.trim() } : {});
   };
 
   const onClearFilters = () => {
@@ -93,7 +97,7 @@ export default function ProductsPage() {
     setCategoryFilter('');
     setSort('');
     setPage(1);
-    load(1, {});
+    setSearchParams({});
   };
 
   const onDelete = async () => {

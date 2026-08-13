@@ -53,13 +53,18 @@ function parseBookFields(body) {
 
   const category = body.category || body.categoryId || '';
 
+  const stock = body.stock != null && String(body.stock).trim() !== ''
+    ? Math.max(0, parseInt(body.stock, 10) || 0)
+    : NaN;
+
   return {
     title,
     author,
     description,
     preview,
     price,
-    category
+    category,
+    stock
   };
 }
 
@@ -134,7 +139,8 @@ router.post('/', upload.single('coverImage'), async (req, res) => {
   description,
   preview,
   price,
-  category
+  category,
+  stock
 } = parseBookFields(req.body);
     if (!title || !author) {
       return res.status(400).json({ error: 'Vui lòng nhập tiêu đề và tác giả' });
@@ -158,6 +164,7 @@ router.post('/', upload.single('coverImage'), async (req, res) => {
   preview,
   price,
   category,
+  stock: Number.isNaN(stock) ? 50 : stock,
   coverImage: cover,
 });
     const populated = await Book.findById(book._id).populate('category');
@@ -175,21 +182,22 @@ router.put('/:id', upload.single('coverImage'), async (req, res) => {
     if (!book) {
       return res.status(404).json({ error: 'Không tìm thấy sách' });
     }
+    const {
+      title,
+      author,
+      description,
+      preview,
+      price,
+      category,
+      stock
+    } = parseBookFields(req.body);
 
-   const book = await Book.create({
-  title,
-  author,
-  description,
-  preview,
-  price,
-  category,
-  coverImage: cover,
-});
     if (title) book.title = title;
     if (author) book.author = author;
     if (req.body.description !== undefined) book.description = description;
     if (req.body.preview !== undefined) book.preview = preview;
     if (!Number.isNaN(price) && price >= 0) book.price = price;
+    if (!Number.isNaN(stock) && stock >= 0) book.stock = stock;
     
 
     if (category) {
